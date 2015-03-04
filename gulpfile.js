@@ -29,7 +29,7 @@ gulp.task('bower', function(){
         gulp.src(bower.match('**/*.css.map').deps[name])
             .pipe(gulp.dest(LIB_PATH + name + '/css/'));
 
-        gulp.src(bower.ext(['eot', 'woff', 'ttf', 'svg']).deps[name])
+        gulp.src(bower.ext(['eot', 'woff', 'ttf', 'svg', 'woff2']).deps[name])
             .pipe(gulp.dest(LIB_PATH + name + '/fonts/'));
     }
 });
