@@ -27,8 +27,6 @@ PKG_PATH = os.path.abspath(os.path.dirname(__file__))
 SRC_PATH = os.path.join(os.path.abspath(PKG_PATH), 'src')
 sys.path.append(SRC_PATH)
 
-assert not os.path.dirname(__file__), 'Must be in package root: %s' % PKG_PATH
-
 
 class Bower(Command):
 
@@ -42,6 +40,9 @@ class Bower(Command):
         pass
 
     def run(self):
+        assert not os.path.dirname(__file__), 'Must be in package root: %s' % (
+            PKG_PATH
+        )
         open('bower.json', 'wb').write(BOWER_JSON)
         open('package.json', 'wb').write(PACKAGE_JSON)
         os.system('rm -rf ./bower_components ./src/anima/static/anima/lib/')
