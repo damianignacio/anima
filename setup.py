@@ -64,8 +64,8 @@ setup(
     url='https://github.com/damianignacio/anima',
     license='BSD licence, see LICENCE file',
     description='Set of tools for django framework.',
-    long_description=open('README.md').read(),
-    install_requires=open('requirements.txt').read().splitlines(),
+    long_description=open(os.path.join(PKG_PATH, 'README.md')).read(),
+    install_requires=open(os.path.join(PKG_PATH, 'requirements.txt')).read(),
     package_dir={'anima': 'src/anima'},
     packages=['anima'],
     classifiers=[
