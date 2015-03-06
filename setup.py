@@ -82,6 +82,8 @@ with open(VER_PATH) as f:
     except ImportError:
         pass
 
+print open(os.path.join(PKG_PATH, 'README.md')).read()
+
 setup(
     name='anima',
     version=anima['__version__'],
@@ -90,6 +92,7 @@ setup(
     include_package_data=True,
     url='https://github.com/damianignacio/anima',
     license='BSD licence, see LICENCE file',
+    description='Yet another set of tools for django.',
     long_description=open(os.path.join(PKG_PATH, 'README.md')).read(),
     setup_requires=open(REQ_PATH).read().split('\n'),
     package_dir={'anima': 'src/anima'},
