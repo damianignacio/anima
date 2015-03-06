@@ -3,6 +3,7 @@ import sys
 import os
 import json
 from setuptools import setup, Command
+from setuptools.command.test import test as TestCommand
 
 
 BOWER_JSON = json.dumps({
@@ -24,7 +25,9 @@ PACKAGE_JSON = json.dumps({
 
 
 PKG_PATH = os.path.abspath(os.path.dirname(__file__))
-SRC_PATH = os.path.join(os.path.abspath(PKG_PATH), 'src')
+SRC_PATH = os.path.join(PKG_PATH, 'src')
+VER_PATH = os.path.join(PKG_PATH, 'src', 'anima', '__init__.py')
+REQ_PATH = os.path.join(PKG_PATH, 'requirements.txt')
 sys.path.append(SRC_PATH)
 
 
@@ -52,20 +55,42 @@ class Bower(Command):
         os.system('rm -f bower.json package.json')
 
 
-from anima import __version__ as version
+class Test(TestCommand):
 
+    def run(self):
+        import django
+        from django.conf import settings
+        from django.core.management import execute_from_command_line
+
+        settings.configure(**{
+            'DATABASES': {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                },
+            },
+            'MIDDLEWARE_CLASSES': (),
+        })
+        django.setup()
+        execute_from_command_line(['manage.py', 'test', 'anima.tests'])
+
+anima = {}
+
+with open(VER_PATH) as f:
+    try:
+        exec(f.read(), anima)
+    except ImportError:
+        pass
 
 setup(
     name='anima',
-    version=version,
+    version=anima['__version__'],
     author=u'Damian Ignacio Valdés',
     author_email='damian.ignacio@gmail.com',
     include_package_data=True,
     url='https://github.com/damianignacio/anima',
     license='BSD licence, see LICENCE file',
-    description='Set of tools for django framework.',
     long_description=open(os.path.join(PKG_PATH, 'README.md')).read(),
-    install_requires=open(os.path.join(PKG_PATH, 'requirements.txt')).read(),
+    setup_requires=open(REQ_PATH).read().split('\n'),
     package_dir={'anima': 'src/anima'},
     packages=['anima'],
     classifiers=[
@@ -83,5 +108,6 @@ setup(
     zip_safe=False,
     cmdclass={
         'bower': Bower,
+        'test': Test,
     },
 )
