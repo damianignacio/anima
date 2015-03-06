@@ -69,6 +69,7 @@ class Test(TestCommand):
                 },
             },
             'MIDDLEWARE_CLASSES': (),
+            'ROOT_URLCONF': 'anima.tests.urls',
         })
         django.setup()
         execute_from_command_line(['manage.py', 'test', 'anima.tests'])
