@@ -10,7 +10,8 @@ BOWER_JSON = json.dumps({
     "name": "anima",
     "dependencies": {
         "jquery": "~2.1",
-        "bootstrap": "~3.3"
+        "bootstrap": "~3.3",
+        "font-awesome": "~4.3"
     }
 })
 
@@ -81,8 +82,6 @@ with open(VER_PATH) as f:
         exec(f.read(), anima)
     except ImportError:
         pass
-
-print open(os.path.join(PKG_PATH, 'README.md')).read()
 
 setup(
     name='anima',

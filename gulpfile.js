@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
     bower = require('bower-files')({
+        camelCase: false,
         overrides: {
             "jquery": {
                 "main": [
@@ -9,6 +10,12 @@ var gulp = require('gulp'),
             "bootstrap": {
                 "main": [
                     "dist/**/*.*"
+                ]
+            },
+            "font-awesome": {
+                "main": [
+                    "css/**/*.*",
+                    "fonts/**/*.*"
                 ]
             }
         }
