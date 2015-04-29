@@ -67,8 +67,10 @@ class Test(TestCommand):
             'DATABASES': {
                 'default': {
                     'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': ':memory:',
                 },
             },
+            'INSTALLED_APPS': ('anima', ),
             'MIDDLEWARE_CLASSES': (),
             'ROOT_URLCONF': 'anima.tests.urls',
         })
@@ -83,6 +85,16 @@ with open(VER_PATH) as f:
     except ImportError:
         pass
 
+
+DJANGO_VERSION = os.environ.get('DJANGO_VERSION', None)
+
+
+def django_version(req):
+    if DJANGO_VERSION and req.startswith('Django'):
+        return 'Django==%s' % DJANGO_VERSION
+    else:
+        return req
+
 setup(
     name='anima',
     version=anima['__version__'],
@@ -93,7 +105,8 @@ setup(
     license='BSD licence, see LICENCE file',
     description='Yet another set of tools for django.',
     long_description=open(os.path.join(PKG_PATH, 'README.md')).read(),
-    setup_requires=open(REQ_PATH).read().split('\n'),
+    install_requires=open(REQ_PATH).read().split('\n'),
+    setup_requires=map(django_version, open(REQ_PATH).read().split('\n')),
     package_dir={'anima': 'src/anima'},
     packages=['anima'],
     classifiers=[
