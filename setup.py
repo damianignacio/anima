@@ -60,6 +60,8 @@ class Test(TestCommand):
 
     def run(self):
         import django
+
+        print 'Django version: %s' % django.get_version()
         from django.conf import settings
         from django.core.management import execute_from_command_line
 
