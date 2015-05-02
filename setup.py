@@ -61,7 +61,7 @@ class Test(TestCommand):
     def run(self):
         import django
 
-        print 'Django version: %s' % django.get_version()
+        print('Django version: %s' % django.get_version())
         from django.conf import settings
         from django.core.management import execute_from_command_line
 
@@ -110,7 +110,8 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: JavaScript',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
     ],
     zip_safe=False,
