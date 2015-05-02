@@ -2,9 +2,8 @@ language: python
 python:
   - "2.7"
 env:
+  - DJANGO_VERSION=1.7
   - DJANGO_VERSION=1.8
-  - DJANGO_VERSION=1.7.7
-script: python setup.py test
+script: tox -e $(echo py$TRAVIS_PYTHON_VERSION-django$DJANGO_VERSION | tr -d .)
 install:
-  - pip install Django==$DJANGO_VERSION
-
+  - pip install tox
