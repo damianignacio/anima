@@ -1,10 +1,9 @@
 from django.core.urlresolvers import resolve, Resolver404
-from django.conf import settings
+from anima.conf import settings
 
 
 def section(request):
-
-    sections = getattr(settings, 'ANIMA_SECTIONS', [])
+    sections = settings.SECTIONS
     if not sections:
         return {}
 

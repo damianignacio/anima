@@ -1,28 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-import json
 from setuptools import setup, Command
 from setuptools.command.test import test as TestCommand
-
-
-BOWER_JSON = json.dumps({
-    "name": "anima",
-    "dependencies": {
-        "jquery": "~2.1",
-        "bootstrap": "~3.3",
-        "font-awesome": "~4.3"
-    }
-})
-
-
-PACKAGE_JSON = json.dumps({
-    "name": "anima",
-    "devDependencies": {
-        "gulp": "^3.8.8",
-        "bower-files": "^3.4.4"
-    }
-})
 
 
 PKG_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -32,7 +12,7 @@ REQ_PATH = os.path.join(PKG_PATH, 'requirements.txt')
 sys.path.append(SRC_PATH)
 
 
-class Bower(Command):
+class Static(Command):
 
     description = 'Update static files.'
     user_options = []
@@ -47,13 +27,10 @@ class Bower(Command):
         assert not os.path.dirname(__file__), 'Must be in package root: %s' % (
             PKG_PATH
         )
-        open('bower.json', 'wb').write(BOWER_JSON)
-        open('package.json', 'wb').write(PACKAGE_JSON)
         os.system('rm -rf ./bower_components ./src/anima/static/anima/lib/')
         os.system('npm install')
-        os.system('bower install')
+        os.system('node_modules/bower/bin/bower install')
         os.system('node_modules/.bin/gulp bower')
-        os.system('rm -f bower.json package.json')
 
 
 class Test(TestCommand):
@@ -116,7 +93,7 @@ setup(
     ],
     zip_safe=False,
     cmdclass={
-        'bower': Bower,
+        'static': Static,
         'test': Test,
     },
 )
