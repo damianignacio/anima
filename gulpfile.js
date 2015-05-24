@@ -17,7 +17,13 @@ var gulp = require('gulp'),
                     "css/**/*.*",
                     "fonts/**/*.*"
                 ]
-            }
+            },
+            "jquery-ui": {
+                "main": [
+                    "*.js",
+                    "ui/*.js"
+                ]
+            },
         }
     });
 

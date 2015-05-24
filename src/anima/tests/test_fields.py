@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.db import models, connection
 
-from ..fields import JsonField
+from ..fields import JsonField, ImageField
 
 
 # Without default
@@ -139,3 +139,39 @@ class FieldsTests(TestCase):
             ]
         )
         self.assertEquals('["foo", "bar"]', result[0]['json'])
+
+    def test_image_field_multiple_wrong_default(self):
+        field = ImageField(multiple=True, default={})
+        checks = field.check()
+        self.assertEquals(1, len(checks))
+        self.assertTrue(
+            'If multiple is true default must be a list.' in checks[0].msg
+        )
+
+    def test_image_field_mutiple_default(self):
+        field = ImageField(multiple=True, default=[])
+        checks = field.check()
+        self.assertEquals(0, len(checks))
+
+    def test_image_field_default_dict(self):
+        field = ImageField(multiple=False, default={})
+        checks = field.check()
+        self.assertEquals(0, len(checks))
+
+    def test_image_field_default_none(self):
+        field = ImageField(multiple=False, default=None)
+        checks = field.check()
+        self.assertEquals(0, len(checks))
+
+    def test_image_field_wrong_default(self):
+        field = ImageField(multiple=False, default=[])
+        checks = field.check()
+        self.assertEquals(1, len(checks))
+        self.assertTrue(
+            'If multiple is false default must be None or a dict.' in checks[0].msg
+        )
+
+    def test_image_field(self):
+        field = ImageField()
+        checks = field.check()
+        self.assertEquals(0, len(checks))

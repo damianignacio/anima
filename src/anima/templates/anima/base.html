@@ -1,0 +1,36 @@
+{% load static i18n %}<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block anima_title %}{% trans 'Anima' %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'anima/lib/bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'anima/lib/font-awesome/css/font-awesome.css' %}">
+    {% block anima_extra_css %}{% endblock %}
+  </head>
+  <body>
+    {% block anima_content %}{% endblock %}
+    <script type="text/javascript" src="{% static 'anima/lib/jquery/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'anima/lib/bootstrap/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'anima/lib/angular/js/angular.js' %}"></script>
+    <script type="text/javascript" src="{% static 'anima/js/index.js' %}"></script>
+    <script type="text/javascript" src="{% static 'anima/js/directives.js' %}"></script>
+    <script type="text/javascript" src="{% static 'anima/js/services.js' %}"></script>
+
+    <script type="text/javascript">
+
+      // TODO pull this from the dom
+      var STATIC_URL = "{% static '' %}";
+
+      angular.element(document).ready(function() {
+          angular.module('anima').constant('settings', {
+              STATIC_URL: STATIC_URL
+          });
+          angular.bootstrap(document, ['anima'])
+      });
+    </script>
+
+    {% block anima_extra_js %}{% endblock %}
+  </body>
+</html>

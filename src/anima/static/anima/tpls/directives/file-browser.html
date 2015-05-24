@@ -1,0 +1,132 @@
+<div class="modal fade anm-file-browser">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">File browser</h4>
+      </div>
+      <div class="modal-body">
+        <!-- TODO: Move this to a stylesheet -->
+        <div class="anm-overlay" style="
+          display: none;
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          z-index: 10;
+          top: 0px;
+          left: 0px;
+        ">
+          <div style="
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: #000;
+            z-index: 10;
+            opacity: 0.07;
+            border-radius: 4px;
+          ">
+
+          </div>
+          <i style="
+            display: inline-block;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-top: 10px;
+            float: right;
+            margin-right: 10px;
+          " class="fa  fa-circle-o-notch fa-spin"></i>
+
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="alert alert-danger alert-dismissable" ng-repeat="error in errors">
+              <button type="button" class="close" ng-click="resetErrors()">&#215;</button>
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-8">
+            <h4>Upload</h4>
+            <form method="post" enctype="multipart/form-data">
+              <div class="input-group">
+                <span class="input-group-btn">
+                  <span class="btn btn-primary anm-file">
+                      Browse <input type="file" anima-file-model="fileInput">
+                  </span>
+                </span>
+                <input type="text" class="form-control" readonly value="{{ fileInput.name }}">
+                <span ng-if="fileInput" class="input-group-btn">
+                  <a ng-click="upload()" class="btn btn-primary" type="submit" >Upload</a>
+                </span>
+              </div>
+            </form>
+            <h4>Files</h4>
+            <div class="form-group anm-search">
+              <span class="fa fa-search"></span>
+              <input class="form-control" type="search" ng-model="q">
+            </div>
+            <div class="form-group">
+              <div class="input-group input-group-sm">
+                <span class="input-group-addon">Path</span>
+                <span class="form-control">
+                  {{ path }}<input ng-model="createFolderName" style="border: none;" type="text">
+                </span>
+                <span class="input-group-btn">
+                  <a ng-click="createFolder()" class="btn btn-primary btn-sm" type="submit" >Create folder</a>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group" ng-if="imagePreview">
+              <h4>Preview</h4>
+              <div class="text-center">
+                <a target="_blank" href="{{ imagePreview.url }}">
+                  <img class="img-thumbnail" style="max-width: 100%; height: auto; margin: 0 auto;" ng-src="{{ imagePreview.url }}">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>File name</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="{{ file.type }}" ng-repeat="file in files | filter:q as results" ng-dblclick="select(file)">
+                  <td>
+                    <div class="anm-truncate">{{ file.name }}</div>
+                  </td>
+                  <td>
+                    <a ng-if="file.type == 'image'" class="btn btn-xs btn-default" ng-click="preview(file)">
+                      <i class="fa fa-photo"></i>&nbsp;Preview
+                    </a>
+                    <a ng-if="file.type != 'directory'" class="btn btn-xs btn-danger" ng-click="delete(file)">
+                      <i class="fa fa-trash"></i>&nbsp;Delete
+                    </a>
+                  </td>
+                </tr>
+                <tr ng-if="isEmptyFolder()" class="info">
+                  <td colspan="2">Empty folder</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button ng-click="close()" type="button" class="btn btn-default">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

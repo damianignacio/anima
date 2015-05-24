@@ -8,7 +8,6 @@ overrides = {
     'TEMPLATE_CONTEXT_PROCESSORS': (
         'anima.context_processors.section',
     ),
-
     'ANIMA': {
         'SECTIONS': [
             {

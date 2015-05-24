@@ -1,5 +1,5 @@
 from django.test import TestCase
-from anima.conf import settings
+from anima.conf import anima_settings
 from anima.utils import override_settings
 
 
@@ -7,7 +7,7 @@ class SettingsTests(TestCase):
 
     def test_default_settings(self):
         with override_settings(ANIMA={}):
-            self.assertEquals([], settings.SECTIONS)
+            self.assertEquals([], anima_settings.SECTIONS)
 
     def test_sections_settings(self):
         sections = (
@@ -24,6 +24,6 @@ class SettingsTests(TestCase):
         )
 
         with override_settings(ANIMA={'SECTIONS': sections}):
-            self.assertEquals(sections, settings.SECTIONS)
+            self.assertEquals(sections, anima_settings.SECTIONS)
 
-        self.assertEquals([], settings.SECTIONS)
+        self.assertEquals([], anima_settings.SECTIONS)
