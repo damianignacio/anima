@@ -5,6 +5,11 @@ python:
 env:
   - DJANGO_VERSION=1.7
   - DJANGO_VERSION=1.8
-script: tox -e $(echo py$TRAVIS_PYTHON_VERSION-django$DJANGO_VERSION | tr -d .)
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
 install:
-  - pip install tox
+  - pip install tox jasmine
+script:
+    - tox -e $(echo py$TRAVIS_PYTHON_VERSION-django$DJANGO_VERSION | tr -d .)
+    - jasmine-ci

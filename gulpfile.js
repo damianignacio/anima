@@ -1,4 +1,6 @@
 var gulp = require('gulp'),
+    html2js = require('gulp-html2js'),
+    concat = require('gulp-concat'),
     bower = require('bower-files')({
         camelCase: false,
         overrides: {
@@ -27,6 +29,7 @@ var gulp = require('gulp'),
         }
     });
 
+
 gulp.task('bower', function(){
 
     var LIB_PATH = './src/anima/static/anima/lib/';
@@ -45,4 +48,20 @@ gulp.task('bower', function(){
         gulp.src(bower.ext(['eot', 'woff', 'ttf', 'svg', 'woff2']).deps[name])
             .pipe(gulp.dest(LIB_PATH + name + '/fonts/'));
     }
+});
+
+gulp.task('templates', function () {
+    gulp.src('./src/anima/static/anima/tpls/**/*.html')
+        .pipe(html2js({
+            outputModuleName: 'anima.templates',
+            useStrict: true,
+            base: './src/anima/static'
+        }))
+        .pipe(concat('templates.js'))
+        .pipe(gulp.dest('./src/anima/static/anima/js/'));
+});
+
+
+gulp.task('default', ['bower', 'templates'], function () {
+    gulp.watch('./src/anima/static/anima/tpls/**/*.html', ['templates']);
 });
