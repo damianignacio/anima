@@ -2,7 +2,6 @@
 import sys
 import os
 from setuptools import setup, Command
-from setuptools.command.test import test as TestCommand
 
 
 PKG_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -33,29 +32,6 @@ class Static(Command):
         os.system('node_modules/.bin/gulp bower')
 
 
-class Test(TestCommand):
-
-    def run(self):
-        import django
-
-        print('Django version: %s' % django.get_version())
-        from django.conf import settings
-        from django.core.management import execute_from_command_line
-
-        settings.configure(**{
-            'DATABASES': {
-                'default': {
-                    'ENGINE': 'django.db.backends.sqlite3',
-                    'NAME': ':memory:',
-                },
-            },
-            'INSTALLED_APPS': ('anima', ),
-            'MIDDLEWARE_CLASSES': (),
-            'ROOT_URLCONF': 'anima.tests.urls',
-        })
-        django.setup()
-        execute_from_command_line(['manage.py', 'test', 'anima.tests'])
-
 anima = {}
 
 with open(VER_PATH) as f:
@@ -76,6 +52,8 @@ setup(
     description='Yet another set of tools for django.',
     long_description=open(os.path.join(PKG_PATH, 'README.md')).read(),
     install_requires=open(REQ_PATH).read().split('\n'),
+    test_suite='anima.tests.run',
+    tests_require=open(REQ_PATH).read().split('\n'),
     package_dir={'anima': 'src/anima'},
     packages=['anima'],
     classifiers=[
@@ -94,6 +72,5 @@ setup(
     zip_safe=False,
     cmdclass={
         'static': Static,
-        'test': Test,
-    },
+    }
 )
