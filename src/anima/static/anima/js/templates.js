@@ -145,7 +145,7 @@ try { module = angular.module("anima.templates"); }
 catch(err) { module = angular.module("anima.templates", []); }
 module.run(["$templateCache", function($templateCache) {
   "use strict";
-  $templateCache.put("anima/tpls/widgets/select-image.html",
+  $templateCache.put("anima/tpls/widgets/select-image-multiple.html",
     "<div>\n" +
     "  <ul class=\"list-unstyled\" anima-sortable=\"{el: 'li', items: options.value, placeholder: 'anm-placeholder anm-form-item'}\">\n" +
     "    <li class=\"anm-form-item\" ng-repeat=\"file in options.value\">\n" +
@@ -164,7 +164,30 @@ module.run(["$templateCache", function($templateCache) {
     "  <textarea style=\"display: none;\" name=\"{{ options.name }}\">{{ images() }}</textarea>\n" +
     "  <a class=\"anm-select-image btn btn-success\" ng-click=\"selectImage()\">Select image</a>\n" +
     "</div>\n" +
-    "\n" +
+    "");
+}]);
+})();
+
+(function(module) {
+try { module = angular.module("anima.templates"); }
+catch(err) { module = angular.module("anima.templates", []); }
+module.run(["$templateCache", function($templateCache) {
+  "use strict";
+  $templateCache.put("anima/tpls/widgets/select-image.html",
+    "<div>\n" +
+    "  <div class=\"input-group\">\n" +
+    "    <span class=\"input-group-btn\">\n" +
+    "      <a class=\"anm-select-image btn btn-success\" ng-click=\"selectImage()\">Select image</a>\n" +
+    "    </span>\n" +
+    "    <input type=\"text\" class=\"form-control\" readonly value=\"{{ options.value.url }}\">\n" +
+    "    <span ng-if=\"options.value\" class=\"input-group-btn\">\n" +
+    "      <a class=\"pull-right btn btn-danger\" ng-click=\"unselectImage()\">\n" +
+    "        <i class=\"fa fa-trash\"></i></i>&nbsp;Remove\n" +
+    "      </a>\n" +
+    "    </span>\n" +
+    "  </div>\n" +
+    "  <textarea style=\"display: none;\" name=\"{{ options.name }}\">{{ images() }}</textarea>\n" +
+    "</div>\n" +
     "");
 }]);
 })();

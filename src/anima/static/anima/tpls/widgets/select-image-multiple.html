@@ -1,0 +1,18 @@
+<div>
+  <ul class="list-unstyled" anima-sortable="{el: 'li', items: options.value, placeholder: 'anm-placeholder anm-form-item'}">
+    <li class="anm-form-item" ng-repeat="file in options.value">
+      <div class="clearfix">
+        <a style="padding-right: 10px;" class="pull-left" ng-if="file.type == 'image'" target="_blank" href="{{ file.url }}">
+          <img class="img-thumbnail" style="height: 60px; width: 60px;" ng-src="{{ file.url }}">
+        </a>
+        <label>{{ file.name }}</label>
+        <a class="pull-right btn btn-danger btn-sm" ng-click="unselectImage(file)">
+          <i class="fa fa-trash"></i></i>&nbsp;Remove
+        </a>
+      </div>
+      <small><em><a target="_blank" href="{{ file.url }}">{{ file.url }}</a></em></small>
+    </li>
+  </ul>
+  <textarea style="display: none;" name="{{ options.name }}">{{ images() }}</textarea>
+  <a class="anm-select-image btn btn-success" ng-click="selectImage()">Select image</a>
+</div>

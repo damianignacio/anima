@@ -13,26 +13,46 @@
             scope: {
                 options: '=',
             },
-            templateUrl: settings.STATIC_URL + 'anima/tpls/widgets/select-image.html',
+            templateUrl: function (el, attrs) {
+                var suffix = (typeof attrs.multiple != 'undefined') ? '-multiple' : '';
+                console.log(suffix);
+                return settings.STATIC_URL + 'anima/tpls/widgets/select-image' + suffix + '.html';
+            },
             link: function (scope, element, attrs) {
+
+                scope.multiple = (typeof attrs.multiple != 'undefined') ? '-multiple' : '';
+
+
                 scope.images = function () {
                     return angular.toJson(scope.options.value);
                 };
+
                 scope.selectedImages = function () {
                     return scope.options.value;
                 };
+
                 scope.unselectImage = function (image) {
-                    var index = scope.options.value.indexOf(image);
-                    if (index != -1) {
-                        scope.options.value.splice(index, 1);
+                    if (scope.multiple) {
+                        var index = scope.options.value.indexOf(image);
+                        if (index != -1) {
+                            scope.options.value.splice(index, 1);
+                        }
+                    } else {
+                        scope.options.value = null;
                     }
                 };
                 scope.addImage = function (name, url, type) {
-                    scope.options.value.push({
+                    var image = {
                         'name': name,
                         'url': url,
                         'type': type
-                    });
+                    };
+
+                    if (scope.multiple) {
+                        scope.options.value.push(image);
+                    } else {
+                        scope.options.value = image;
+                    }
                 };
 
                 scope.selectImage = function () {

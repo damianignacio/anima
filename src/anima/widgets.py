@@ -26,6 +26,7 @@ class SelectImageWidget(Widget):
     def __init__(self, attrs=None):
         default_attrs = {
             'path': None,
+            'multiple': False,
         }
         if attrs:
             default_attrs.update(attrs)
@@ -33,14 +34,16 @@ class SelectImageWidget(Widget):
         super(SelectImageWidget, self).__init__(default_attrs)
 
     def _parse_value(self, name, value, attrs):
+        default = [] if attrs['multiple'] else None
         return {
             'name': name,
-            'value': value or [],
+            'value': value or default,
             'path': attrs['path'],
         }
 
     def render(self, name, value, attrs=None):
         final_attrs = self.build_attrs(attrs)
         return format_html(SELECT_IMAGE_TPL, flatatt({
-            'options': json.dumps(self._parse_value(name, value, final_attrs))
+            'options': json.dumps(self._parse_value(name, value, final_attrs)),
+            'multiple': final_attrs['multiple'],
         }))

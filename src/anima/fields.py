@@ -17,7 +17,7 @@ class JsonField(six.with_metaclass(models.SubfieldBase, models.Field)):
 
     description = _('Json')
 
-    def __init__(self, default=None, compact=False, blank=False):
+    def __init__(self, default=None, compact=False, blank=False, verbose_name=None):
         self.compact = compact
         if self.compact:
             self.separators = (',', ':')
@@ -28,6 +28,7 @@ class JsonField(six.with_metaclass(models.SubfieldBase, models.Field)):
             'default': default,
             'null': False,  # Enforce to store 'null' for None value
             'blank': blank,
+            'verbose_name': verbose_name,
         }
 
         super(JsonField, self).__init__(**kwargs)
@@ -76,22 +77,37 @@ class JsonField(six.with_metaclass(models.SubfieldBase, models.Field)):
         return super(JsonField, self).formfield(**defaults)
 
 
+class ImageFormField(JsonFormField):
+
+    def __init__(self, *args, **kwargs):
+        self.multiple = kwargs.pop('multiple', False)
+        super(ImageFormField, self).__init__(*args, **kwargs)
+
+    def widget_attrs(self, widget):
+        return {
+            'multiple': self.multiple,
+        }
+
+
 class ImageField(six.with_metaclass(models.SubfieldBase, JsonField)):
 
-    def __init__(self, multiple=False, compact=False, default=None, blank=False):
+    def __init__(self, multiple=False, compact=False, default=None, blank=False, verbose_name=None):
         self.multiple = multiple
 
         kwargs = {
             'default': default,
             'compact': compact,
             'blank': blank,
+            'verbose_name': verbose_name,
         }
 
         super(ImageField, self).__init__(**kwargs)
 
     def formfield(self, **kwargs):
         defaults = {
-            'widget': SelectImageWidget
+            'form_class': ImageFormField,
+            'widget': SelectImageWidget,
+            'multiple': self.multiple,
         }
         defaults.update(kwargs)
         return super(ImageField, self).formfield(**defaults)
