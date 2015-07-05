@@ -108,7 +108,7 @@
                 }
                 if (prefix) {
                     // make sure we end in /
-                    prefix = prefix.replace(/\/$/, '') + '/'
+                    prefix = prefix.replace(/\/$/, '') + '/';
                     url += '&prefix=' + prefix;
                 }
                 if (marker) {
@@ -116,13 +116,14 @@
                 }
                 return url;
             },
-            get: function (path, marker, items) {
+            get: function (path) {
 
-                console.log(path);
-
-                var marker = null,
-                    items = [],
-                    deferred = $q.defer();
+                var deferred = $q.defer(),
+                    items = {
+                        files: [],
+                        directories: []
+                    },
+                    marker = null;
 
                 (function get (path, marker, items, deferred) {
 
@@ -130,16 +131,18 @@
 
                     $http.get(url).success(function (data, status, headers, config) {
                         var info = s3.parseResponse(data);
+                        var i;
+
+                        for (i = info.directories.length - 1; i >= 0; i--) {
+                            items.directories.push(info.directories[i]);
+                        }
+                        for (i = info.files.length - 1; i >= 0; i--) {
+                            items.files.push(info.files[i]);
+                        }
 
                         if (info.nextMarker !== null) {
                             get(path, info.nextMarker, items, deferred);
                         } else {
-
-                            var all = info.directories.concat(info.files);
-
-                            for (var i = all.length - 1; i >= 0; i--) {
-                                items.push(all[i]);
-                            }
 
                             // add the ../ at the start of the directory listing
                             // cannot go beyond the bucketPath
@@ -148,18 +151,17 @@
                                 // one directory up
                                 var key = info.prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join('/');
 
-                                items = [{
+                                items.directories = [{
                                     up: true,
                                     name: '../',
                                     key: preparePath(key),
                                     type: 'directory',
-                                }].concat(items);
+                                }].concat(items.directories);
                             }
 
-                            console.log(items);
                             deferred.resolve({
                                 path: preparePath(info.prefix),
-                                files: items,
+                                files: items.directories.concat(items.files),
                             });
                         }
                     });
@@ -171,12 +173,14 @@
             parseResponse: function (data) {
 
                 var xml = $($.parseXML(data)).children('ListBucketResult'),
-                    prefix = xml.children('Prefix').text();
+                    prefix = xml.children('Prefix').text(),
+                    nextMarker = null;
 
                 var files = $.map(xml.find('Contents'), function (item) {
                     item = $(item);
 
                     var key = item.find('Key').text();
+                    var eTag = item.find('ETag').text();
 
                     // Exclude the folders (looks like they are actual files but finish with "/")
                     if (/\/$/.test(key)) { return null; }
@@ -187,9 +191,10 @@
                         lastModified: item.find('LastModified').text(),
                         size: item.find('Size').text(),
                         type: /\.(png|jpg|jpeg|gif)$/i.test(key) ? 'image' : 'file',
-                        url: bucketUrl + key
-                    }
-                })
+                        url: bucketUrl + key,
+                        eTag: JSON.parse(eTag)
+                    };
+                });
 
                 files = files.filter(function (el) {
                     return el !== null;
@@ -204,13 +209,11 @@
                         name: key.substring(prefix.length),
                         key: preparePath(key),
                         type: 'directory',
-                    }
+                    };
                 });
 
                 if (xml.children('IsTruncated').text() == 'true') {
-                    var nextMarker = xml.children('NextMarker').text();
-                } else {
-                    var nextMarker = null;
+                    nextMarker = xml.children('NextMarker').text();
                 }
 
                 return {
@@ -218,11 +221,11 @@
                     directories: directories,
                     prefix: prefix,
                     nextMarker: nextMarker
-                }
+                };
             },
             upload: function (file, path) {
 
-                var deferred = $q.defer()
+                var deferred = $q.defer();
 
                 signUpload(file, path).success(function (s3, status, headers, config) {
 
@@ -247,7 +250,7 @@
             },
             delete: function (key) {
 
-                var deferred = $q.defer()
+                var deferred = $q.defer();
 
                 $http({
                     method: 'POST',
@@ -264,7 +267,7 @@
 
                 return deferred.promise;
             }
-        }
+        };
 
         return {
             get: function (path) {
@@ -276,7 +279,7 @@
             delete: function (file) {
                 return s3.delete(file);
             }
-        }
+        };
     });
 
     /**
@@ -294,8 +297,8 @@
             modal = angular.element(response);
         });
 
-        scope.errors = []
-        scope.errorsTimeout;
+        scope.errors = [];
+        scope.errorsTimeout = null;
         scope.resetErrors = function () {
             $timeout.cancel(scope.errorsTimeout);
             scope.errors = [];
@@ -329,7 +332,7 @@
                     scope.resetErrors();
                     for (var i = data.errors.length - 1; i >= 0; i--) {
                         scope.errors.push(data.errors[i]);
-                    };
+                    }
 
                     // Auto hide errors
                     scope.errorsTimeout = $timeout(function () {
@@ -349,7 +352,7 @@
                     scope.files = response.files;
                 });
             } else if (scope.callback) {
-                scope.callback(file.name, file.url, file.type);
+                scope.callback(file);
                 scope.close();
             } else {
                 scope.close();
@@ -358,7 +361,7 @@
 
         scope.isEmptyFolder = function () {
             if (!scope.files) { return true; }
-            return (scope.files.length == 0 || (scope.files.length == 1 && scope.files[0].up))
+            return (!scope.files.length || (scope.files.length == 1 && scope.files[0].up));
         };
 
         scope.createFolder = function () {
@@ -391,7 +394,7 @@
         };
 
         function initialize (options) {
-            if (initialized) { return false; };
+            if (initialized) { return false; }
 
             initialized = true;
 
@@ -426,7 +429,7 @@
             });
 
             return true;
-        };
+        }
 
         return {
             open: function (options) {

@@ -41,11 +41,12 @@
                         scope.options.value = null;
                     }
                 };
-                scope.addImage = function (name, url, type) {
+                scope.addImage = function (file) {
                     var image = {
-                        'name': name,
-                        'url': url,
-                        'type': type
+                        'name': file.name,
+                        'url': file.url,
+                        'type': file.type,
+                        'eTag': file.eTag
                     };
 
                     if (scope.multiple) {
