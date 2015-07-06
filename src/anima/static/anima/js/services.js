@@ -192,7 +192,7 @@
                         size: item.find('Size').text(),
                         type: /\.(png|jpg|jpeg|gif)$/i.test(key) ? 'image' : 'file',
                         url: bucketUrl + key,
-                        eTag: JSON.parse(eTag)
+                        eTag: eTag
                     };
                 });
 
