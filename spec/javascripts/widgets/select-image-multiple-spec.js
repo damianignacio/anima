@@ -72,15 +72,26 @@ describe('Select image widget (multiple)', function() {
         var element = compileElement({path: null, name: 'input-name', value: []});
         var scope = element.isolateScope();
         expect(element.find('.anm-form-item').length).toBe(0);
-        scope.addImage('Image #1', 'http://...', 'image/png');
-        scope.addImage('Image #2', 'http://...', 'image/png');
+
+        scope.addImage({
+            name: 'Image #1',
+            url: 'http://xyz1',
+            type: 'image',
+            eTag: 'xyz1',
+        });
+        scope.addImage({
+            name: 'Image #2',
+            url: 'http://xyz2',
+            type: 'image',
+            eTag: 'xyz2',
+        });
         $rootScope.$digest();
         expect(element.find('.anm-form-item').length).toBe(2);
 
         result = angular.toJson([
-            {name: 'Image #1', url: 'http://...', type: 'image/png'},
-            {name: 'Image #2', url: 'http://...', type: 'image/png'}
-        ])
+            {name: 'Image #1', url: 'http://xyz1', type: 'image', eTag: 'xyz1'},
+            {name: 'Image #2', url: 'http://xyz2', type: 'image', eTag: 'xyz2'}
+        ]);
 
         expect(element.find('textarea').val()).toBe(result);
     });

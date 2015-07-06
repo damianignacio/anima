@@ -68,10 +68,20 @@ describe('Select image widget', function() {
         var element = compileElement({path: null, name: 'input-name', value: null});
         var scope = element.isolateScope();
 
-        scope.addImage('Image #1', 'http://...', 'image/png');
-        scope.addImage('Image #2', 'http://...', 'image/png');
+        scope.addImage({
+            name: 'Image #1',
+            url: 'http://xyz1',
+            type: 'image',
+            eTag: 'xyz1',
+        });
+        scope.addImage({
+            name: 'Image #2',
+            url: 'http://xyz2',
+            type: 'image',
+            eTag: 'xyz2',
+        });
         $rootScope.$digest();
-        result = angular.toJson({name: 'Image #2', url: 'http://...', type: 'image/png'});
+        result = angular.toJson({name: 'Image #2', url: 'http://xyz2', type: 'image', eTag: 'xyz2'});
 
         expect(element.find('textarea').val()).toBe(result);
     });
