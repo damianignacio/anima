@@ -40,7 +40,6 @@ with open(VER_PATH) as f:
     except ImportError:
         pass
 
-
 setup(
     name='anima',
     version=anima['__version__'],
@@ -50,7 +49,7 @@ setup(
     url='https://github.com/damianignacio/anima',
     license='MIT',
     description='Yet another set of tools for django.',
-    long_description=open(os.path.join(PKG_PATH, 'README.md')).read(),
+    long_description=open(os.path.join(PKG_PATH, 'README.rst')).read(),
     install_requires=open(REQ_PATH).read().split('\n'),
     test_suite='anima.tests.run',
     tests_require=open(REQ_PATH).read().split('\n'),
