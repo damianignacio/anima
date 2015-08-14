@@ -177,7 +177,7 @@ module.run(["$templateCache", function($templateCache) {
     "<div>\n" +
     "  <div class=\"input-group\">\n" +
     "    <span class=\"input-group-btn\">\n" +
-    "      <a class=\"anm-select-image btn btn-success\" ng-click=\"selectImage()\">Select image</a>\n" +
+    "      <a class=\"anm-select-image btn btn-success\" ng-click=\"selectImage()\">Select file</a>\n" +
     "    </span>\n" +
     "    <input type=\"text\" class=\"form-control\" readonly value=\"{{ options.value.url }}\">\n" +
     "    <span ng-if=\"options.value\" class=\"input-group-btn\">\n" +
