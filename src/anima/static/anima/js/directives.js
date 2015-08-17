@@ -32,23 +32,51 @@
             restrict: 'A',
             scope: {
                 options: '=animaSortable',
+                items: '=animaSortableItems',
             },
             link: function (scope, element, attrs) {
 
+                var cachedModels = [], start, end;
+
+                var getDOM = function () {
+                    return element.find(scope.options.el)
+                        .not(scope.options.placeholder);
+                };
+
+                var setModels = function (items) {
+                    scope.items = items || [];
+                    scope.$apply();
+                };
+
                 element.on('sortstart', function(e, ui) {
-                    ui.item.data('start', ui.item.index());
+                    e.stopPropagation();
+                    start = ui.item.index();
+
+                    var dom = getDOM();
+
+                    // Let angular update the DOM
+                    cachedModels = scope.items;
+                    setModels();
+
+                    element.append(dom);
+                    element.sortable('refresh');
                 });
 
                 element.on('sortstop', function(e, ui) {
                     e.stopPropagation();
+                    end = ui.item.index();
 
-                    var start = ui.item.data('start'),
-                        end = ui.item.index();
+                    getDOM().remove();
 
-                    scope.options.items.splice(
-                        end, 0, scope.options.items.splice(start, 1)[0]
-                    );
-                    scope.$apply();
+                    if (start != end) {
+                        cachedModels.splice(
+                            end, 0, cachedModels.splice(start, 1)[0]
+                        );
+                    }
+
+                    // Let angular update the DOM
+                    setModels(cachedModels);
+                    element.sortable('refresh');
                 });
 
                 // Disable selection on the container

@@ -147,7 +147,7 @@ module.run(["$templateCache", function($templateCache) {
   "use strict";
   $templateCache.put("anima/tpls/widgets/select-image-multiple.html",
     "<div>\n" +
-    "  <ul class=\"list-unstyled\" anima-sortable=\"{el: 'li', items: options.value, placeholder: 'anm-placeholder anm-form-item'}\">\n" +
+    "  <ul class=\"list-unstyled\" anima-sortable=\"{el: 'li', placeholder: 'anm-placeholder anm-form-item'}\" anima-sortable-items=\"options.value\">\n" +
     "    <li class=\"anm-form-item\" ng-repeat=\"file in options.value\">\n" +
     "      <div class=\"clearfix\">\n" +
     "        <a style=\"padding-right: 10px;\" class=\"pull-left\" ng-if=\"file.type == 'image'\" target=\"_blank\" href=\"{{ file.url }}\">\n" +
