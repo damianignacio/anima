@@ -20,6 +20,11 @@ overrides = {
                 'slug': 'section2',
                 'urls': ('section2-url', 'section2.1-url', )
             },
+            {
+                'name': 'Section #5',
+                'slug': 'section5',
+                'urls': ('ns:section5-url', )
+            },
         ]
     }
 }
@@ -41,6 +46,10 @@ class ContextProcessorsTests(TestCase):
             response = self.client.get(reverse('section2-url'))
             self.assertContains(response, 'section2')
             self.assertContains(response, 'Section #2')
+
+            response = self.client.get(reverse('ns:section5-url'))
+            self.assertContains(response, 'section5')
+            self.assertContains(response, 'Section #5')
 
     def test_section_empty(self):
         s = deepcopy(overrides)

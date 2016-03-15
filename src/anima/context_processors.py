@@ -1,6 +1,5 @@
 from django.core.urlresolvers import resolve, Resolver404
 from anima.conf import anima_settings
-from django.conf import settings
 
 
 def section(request):
@@ -9,9 +8,17 @@ def section(request):
         return {}
 
     try:
-        url = resolve(request.path).url_name
+        url = resolve(request.path)
+
+        if url.namespaces:
+            urls = [
+                ':'.join([ns, url.url_name]) for ns in url.namespaces
+            ]
+        else:
+            urls = [url.url_name]
+
         for section in sections:
-            if url in section['urls']:
+            if any([name in section['urls'] for name in urls]):
                 return {
                     'section': section
                 }
