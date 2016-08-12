@@ -6,7 +6,6 @@ env:
   - DJANGO_VERSION=1.7
   - DJANGO_VERSION=1.8
   - DJANGO_VERSION=1.9
-  - DJANGO_VERSION=1.10
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
