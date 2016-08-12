@@ -4,10 +4,14 @@ from django.core.urlresolvers import reverse
 from django.test import Client
 from anima.utils import override_settings
 
+from django import get_version
+
+from distutils.version import LooseVersion
+
+version = get_version()
+
+
 overrides = {
-    'TEMPLATE_CONTEXT_PROCESSORS': (
-        'anima.context_processors.section',
-    ),
     'ANIMA': {
         'SECTIONS': [
             {
@@ -28,6 +32,27 @@ overrides = {
         ]
     }
 }
+
+
+if LooseVersion(version) < LooseVersion('1.8'):
+
+    # Deprecated in django 1.8
+    overrides['TEMPLATE_CONTEXT_PROCESSORS'] = (
+        'anima.context_processors.section',
+    )
+
+else:
+    overrides['TEMPLATES'] = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'anima.context_processors.section',
+                ],
+            },
+        }
+    ]
 
 
 class ContextProcessorsTests(TestCase):
@@ -76,6 +101,7 @@ class ContextProcessorsTests(TestCase):
     def test_section_multiple_urls(self):
         with override_settings(**overrides):
             response = self.client.get(reverse('section2-url'))
+            from django.conf import settings
             self.assertContains(response, 'section2')
             self.assertContains(response, 'Section #2')
 

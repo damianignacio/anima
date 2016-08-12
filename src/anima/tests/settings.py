@@ -13,3 +13,8 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = ()
 
 ROOT_URLCONF = 'anima.tests.urls'
+
+
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+}]

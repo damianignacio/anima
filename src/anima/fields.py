@@ -13,7 +13,13 @@ class JsonFormField(forms.Field):
         return super(JsonFormField, self).clean(value)
 
 
-class JsonField(six.with_metaclass(models.SubfieldBase, models.Field)):
+try:
+    JsonFieldBase = six.with_metaclass(models.SubfieldBase, models.Field)
+except:
+    JsonFieldBase = models.Field
+
+
+class JsonField(JsonFieldBase):
 
     description = _('Json')
 
@@ -89,7 +95,13 @@ class ImageFormField(JsonFormField):
         }
 
 
-class ImageField(six.with_metaclass(models.SubfieldBase, JsonField)):
+try:
+    ImageField = six.with_metaclass(models.SubfieldBase, JsonField)
+except:
+    ImageField = JsonField
+
+
+class ImageField(ImageField):
 
     def __init__(self, multiple=False, compact=False, default=None, blank=False, verbose_name=None):
         self.multiple = multiple
